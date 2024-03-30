@@ -1,0 +1,122 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./modelo.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:define name="content">
+        <h:form>
+            <p:panelGrid columns="2">
+                <p:outputLabel value="CPF"/>
+                <p:inputText value="#{matriculaBean.matricula.aluno.cpf}"
+                             disabled="true"/>
+
+                <p:outputLabel value="Nome"/>
+                <p:inputText value="#{matriculaBean.matricula.aluno.nome}"
+                             disabled="true"/>
+
+                <p:outputLabel value="Turma"/>
+                <h:selectOneMenu value="#{matriculaBean.matricula.turma}"
+                                 required="true"
+                                 requiredMessage="A turma é obrigatória"
+                                 converter="#{turmaConverter}">
+                    <f:ajax event="change" render=":dadosCurso"/>
+                    <f:selectItems value="#{turmaBean.itensTurma}"/>
+                </h:selectOneMenu>
+
+                <p:outputLabel id="data" value="Data"/>
+                <p:datePicker value="#{matriculaBean.matricula.data}"
+                              pattern="dd/MM/yyyy"
+                              required="true"
+                              requiredMessage="A data é obrigatória">
+                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                </p:datePicker>
+
+                <p:outputLabel id="dataPagamento" value="Data de Pagamento"/>
+                <p:datePicker value="#{matriculaBean.matricula.dataPagamento}" 
+                              pattern="dd/MM/yyyy"
+                              required="true"
+                              requiredMessage="A data de pagamento é obrigatória">
+                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                </p:datePicker>
+
+            </p:panelGrid>
+            <p:commandButton value="Confirmar" action="#{matriculaBean.confirmar()}" ajax="false"/>
+        </h:form>
+
+        <h2>Dados do Curso:</h2>
+        <p:panelGrid columns="2" id="dadosCurso">
+            <p:outputLabel value="Nome"/>
+            <p:inputText value="#{matriculaBean.matricula.turma.curso.nome}"
+                         disabled="true"/>
+
+            <p:outputLabel value="Ementa"/>
+            <p:inputText value="#{matriculaBean.matricula.turma.curso.ementa}"
+                         disabled="true"/>
+
+            <p:outputLabel value="Carga Horária"/>
+            <p:inputNumber value="#{matriculaBean.matricula.turma.curso.cargaHoraria}" decimalPlaces="0"
+                           disabled="true"/>
+        </p:panelGrid>
+
+        <p:dataTable id="listaMatricula" value="#{matriculaBean.listaMatriculas}" var="p">
+            <p:column headerText="Data">
+                <h:outputText value="#{p.data}">
+                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                </h:outputText>
+            </p:column>
+
+            <p:column headerText="Aluno">
+                <h:outputText value="#{p.aluno.nome}"/>
+            </p:column>
+
+            <p:column headerText="Data Pagamento">
+                <h:outputText value="#{p.dataPagamento}">
+                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                </h:outputText>
+            </p:column>
+
+            <p:column headerText="Curso">
+                <h:outputText value="#{p.turma.curso.nome}"/>
+            </p:column>
+
+            <p:column headerText="Inicio">
+                <h:outputText value="#{p.turma.dataInicio}">
+                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                </h:outputText>
+            </p:column>
+
+            <p:column headerText="Fim">
+                <h:outputText value="#{p.turma.dataFim}">
+                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                </h:outputText>
+            </p:column>
+
+            <p:column headerText="Valor">
+                <h:outputText value="#{p.turma.valor}">
+                    <f:convertNumber pattern="#0.00" />
+                </h:outputText>
+            </p:column>
+
+            <p:column>
+                <h:form>
+                    <p:commandButton value="Excluir" update="listaMatricula mensagens" 
+                                     action="#{matriculaBean.excluir(p)}" 
+                                     styleClass="ui-button-flat">
+                        <p:confirm header="Confirma&ccedil;&atilde;o" 
+                                   message="Tem certeza que deseja remover esta Matricula?" 
+                                   icon="pi pi-exclamation-triangle"/>
+                    </p:commandButton>
+                </h:form>
+            </p:column>
+            <p:column>
+                <h:form><p:commandButton value="Editar" ajax="false"
+                                         action="#{matriculaBean.editar(p)}"/>
+                </h:form>
+            </p:column>
+        </p:dataTable>
+    </ui:define>
+</ui:composition>

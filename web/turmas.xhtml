@@ -1,0 +1,105 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./modelo.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:define name="content">
+        <h:form>
+            <p:panelGrid columns="2">
+                <p:outputLabel value="Curso"/>
+                <h:selectOneMenu value="#{turmaBean.turma.curso}"
+                                 converter="#{cursoConverter}"
+                                 required="true"
+                                 requiredMessage="O Curso é obrigatório">
+                    <f:selectItems value="#{cursoBean.itensCursos}"/>
+                </h:selectOneMenu>
+                <p:outputLabel value="Professor"/>
+                <h:selectOneMenu value="#{turmaBean.turma.professor}"
+                                 converter="#{profConverter}"
+                                 required="true"
+                                 requiredMessage="O Professor é obrigatório">
+                    <f:selectItems value="#{profBean.itensProfessor}"/>
+                </h:selectOneMenu>
+
+                <p:outputLabel value="Data de Início"/>
+                <p:datePicker value="#{turmaBean.turma.dataInicio}" 
+                              pattern="dd/MM/yyyy"
+                              required="true"
+                              requiredMessage="A data de início é obrigatória">
+                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                </p:datePicker>
+
+                <p:outputLabel value="Data de Encerramento"/>
+                <p:datePicker value="#{turmaBean.turma.dataFim}" 
+                              pattern="dd/MM/yyyy"
+                              required="true"
+                              requiredMessage="A data de encerramento é obrigatória">
+                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                </p:datePicker>
+
+                <p:outputLabel value="Vagas"/>
+                <p:inputNumber value="#{turmaBean.turma.vagas}" 
+                               decimalPlaces="0" 
+                               minValue="1"/>
+
+            </p:panelGrid>
+            <p:commandButton value="Confirmar" action="#{turmaBean.confirmar()}" ajax="false"/>
+        </h:form>
+        <p:dataTable id="listaTurmas" value="#{turmaBean.listaTurmas}" var="p">
+            <p:column headerText="ID">
+                <h:outputText value="#{p.id}"/>
+            </p:column>
+
+            <p:column headerText="Curso">
+                <h:outputText value="#{p.curso.nome}"/>
+            </p:column>
+
+            <p:column headerText="Professor">
+                <h:outputText value="#{p.professor.nome}"/>
+            </p:column>
+
+            <p:column headerText="Data de Início">
+                <h:outputText value="#{p.dataInicio}">
+                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                </h:outputText>
+            </p:column>
+
+            <p:column headerText="Data de Fim">
+                <h:outputText value="#{p.dataFim}">
+                    <f:convertDateTime pattern="dd/MM/yyyy"/>
+                </h:outputText>
+            </p:column>
+
+            <p:column headerText="Valor">
+                <h:outputText value="#{p.valor}">
+                    <f:convertNumber pattern="#0.00" />
+                </h:outputText>
+            </p:column>
+
+            <p:column headerText="Vagas">
+                <h:outputText value="#{p.vagas}"/>
+            </p:column>
+
+            <p:column>
+                <h:form>
+                    <p:commandButton value="Excluir" update="listaTurmas mensagens" 
+                                     action="#{turmaBean.excluir(p)}" 
+                                     styleClass="ui-button-flat">
+                        <p:confirm header="Confirma&ccedil;&atilde;o" 
+                                   message="Tem certeza que deseja remover esta Turma?" 
+                                   icon="pi pi-exclamation-triangle"/>
+                    </p:commandButton>
+                </h:form>
+            </p:column>
+            <p:column>
+                <h:form><p:commandButton value="Editar" ajax="false"
+                                         action="#{turmaBean.editar(p)}"/>
+                </h:form>
+            </p:column>
+        </p:dataTable>
+    </ui:define>
+</ui:composition>

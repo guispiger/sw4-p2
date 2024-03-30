@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./modelo.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:define name="content">
+        <h:form>
+            <p:panelGrid columns="2">
+                <p:outputLabel value="CPF"/>
+                <p:inputText value="#{profBean.professor.cpf}"
+                             required="true"
+                             requiredMessage="O CPF é obrigatório"/>
+
+                <p:outputLabel value="Nome"/>
+                <p:inputText value="#{profBean.professor.nome}"
+                             required="true"
+                             requiredMessage="O Nome é obrigatório"/>
+
+                <p:outputLabel value="E-mail"/>
+                <p:inputText value="#{profBean.professor.email}"/>
+
+                <p:outputLabel value="Telefone"/>
+                <p:inputText value="#{profBean.professor.telefone}"/>
+
+                <p:outputLabel value="Valor da Hora"/>
+                <p:inputNumber value="#{profBean.professor.valorHora}" 
+                               decimalPlaces="2"
+                               minValue="1"/>
+
+            </p:panelGrid>
+            <p:commandButton value="Confirmar" action="#{profBean.confirmar()}" ajax="false"/>
+        </h:form>
+        <p:dataTable id="listaProf" value="#{profBean.listaProfessores}" var="p">
+            <p:column headerText="CPF">
+                <h:outputText value="#{p.cpf}"/>
+            </p:column>
+            <p:column headerText="Nome">
+                <h:outputText value="#{p.nome}"/>
+            </p:column>
+            <p:column headerText="E-mail">
+                <h:outputText value="#{p.email}"/>
+            </p:column>
+            <p:column headerText="Telefone">
+                <h:outputText value="#{p.telefone}"/>
+            </p:column>
+            <p:column headerText="Valor da Hora">
+                <h:outputText value="#{p.valorHora}"/>
+            </p:column>
+
+            <p:column>
+                <h:form>
+                    <p:commandButton value="Excluir" update="listaProf mensagens" 
+                                     action="#{profBean.excluir(p)}" 
+                                      styleClass="ui-button-flat">
+                    <p:confirm header="Confirma&ccedil;&atilde;o" 
+                               message="Tem certeza que deseja remover este Professor?" 
+                               icon="pi pi-exclamation-triangle"/>
+                    </p:commandButton>
+                </h:form>
+            </p:column>
+            <p:column>
+                <h:form><p:commandButton value="Editar" ajax="false"
+                                         action="#{profBean.editar(p)}"/>
+                </h:form>
+            </p:column>
+        </p:dataTable>
+    </ui:define>
+</ui:composition>

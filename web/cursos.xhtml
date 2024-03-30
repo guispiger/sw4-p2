@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./modelo.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:define name="content">
+        <h:form>
+            <p:panelGrid columns="2">
+                <p:outputLabel value="Nome"/>
+                <p:inputText value="#{cursoBean.curso.nome}"
+                             required="true"
+                             requiredMessage="O Nome é obrigatório"/>
+
+                <p:outputLabel value="Ementa"/>
+                <p:inputText value="#{cursoBean.curso.ementa}"/>
+
+                <p:outputLabel value="Carga Horária"/>
+                <p:inputNumber value="#{cursoBean.curso.cargaHoraria}" decimalPlaces="0" 
+                               minValue="1"/>
+
+            </p:panelGrid>
+            <p:commandButton value="Confirmar" action="#{cursoBean.confirmar()}" ajax="false"/>
+        </h:form>
+        <p:dataTable id="listaCursos" value="#{cursoBean.listarCursos}" var="p">
+            <p:column headerText="ID">
+                <h:outputText value="#{p.id}"/>
+            </p:column>
+            
+            <p:column headerText="Nome">
+                <h:outputText value="#{p.nome}"/>
+            </p:column>
+            
+            <p:column headerText="Ementa">
+                <h:outputText value="#{p.ementa}"/>
+            </p:column>
+            
+            <p:column headerText="Carga Horária">
+                <h:outputText value="#{p.cargaHoraria}"/>
+            </p:column>
+
+            <p:column>
+                <h:form>
+                    <p:commandButton value="Excluir" update="listaCursos mensagens" 
+                                     action="#{cursoBean.excluir(p)}" 
+                                     styleClass="ui-button-flat">
+                        <p:confirm header="Confirma&ccedil;&atilde;o" 
+                                   message="Tem certeza que deseja remover este Curso?" 
+                                   icon="pi pi-exclamation-triangle"/>
+                    </p:commandButton>
+                </h:form>
+            </p:column>
+            <p:column>
+                <h:form><p:commandButton value="Editar" ajax="false"
+                                         action="#{cursoBean.editar(p)}"/>
+                </h:form>
+            </p:column>
+        </p:dataTable>
+    </ui:define>
+</ui:composition>
